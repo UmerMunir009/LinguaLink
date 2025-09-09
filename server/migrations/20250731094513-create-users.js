@@ -22,10 +22,31 @@ module.exports = {
         type:Sequelize.STRING,
         allowNull:false
       },
+      bio:{
+        type:Sequelize.STRING,
+        allowNull:true,
+        defaultValue:''
+      },
       profilePic:{
         type:Sequelize.STRING,
-        allowNull:false,
+        allowNull:true,
         defaultValue:''
+      },
+      nativeLanguage:{
+        type:Sequelize.STRING,
+        defaultValue:''
+      },
+      learningLanguage:{
+        type:Sequelize.STRING,
+        defaultValue:''
+      },
+      location:{
+        type:Sequelize.STRING,
+        defaultValue:''
+      },
+      isOnBoarded:{
+        type:Sequelize.BOOLEAN,
+        defaultValue:false
       },
       createdAt: {
         allowNull: false,

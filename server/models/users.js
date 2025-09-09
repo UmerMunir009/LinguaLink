@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model, Sequelize
-} = require('sequelize');
+"use strict";
+const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -9,17 +7,16 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-    }
+    static associate(models) {}
   }
-  User.init({
-     id: {
+  User.init(
+    {
+      id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.literal("gen_random_uuid()"),
         allowNull: false,
         primaryKey: true,
-      },
-      name: {
+      }, name: {
         type: Sequelize.STRING,
         allowNull:false
       },
@@ -32,14 +29,38 @@ module.exports = (sequelize, DataTypes) => {
         type:Sequelize.STRING,
         allowNull:false
       },
+      bio:{
+        type:Sequelize.STRING,
+        allowNull:true,
+        defaultValue:''
+      },
       profilePic:{
+        type:Sequelize.STRING,
+        allowNull:true,
+        defaultValue:''
+      },
+      nativeLanguage:{
         type:Sequelize.STRING,
         defaultValue:''
       },
-  }, {
-    sequelize,
-    tableName: 'users',
-    modelName: 'User',
-  });
+      learningLanguage:{
+        type:Sequelize.STRING,
+        defaultValue:''
+      },
+      location:{
+        type:Sequelize.STRING,
+        defaultValue:''
+      },
+      isOnBoarded:{
+        type:Sequelize.BOOLEAN,
+        defaultValue:false
+      },
+    },
+    {
+      sequelize,
+      tableName: "users",
+      modelName: "User",
+    }
+  );
   return User;
 };
