@@ -106,7 +106,7 @@ const logout = asyncErrorHandler(async (req, res) => {
 
 
 const onboarding = asyncErrorHandler(async (req, res) => {
-  const {bio, nativeLanguage, learningLanguage, location } = req.body;
+  const {bio, nativeLanguage, learningLanguage, location} = req.body;
 
   const user = await User.findOne({ where: { id: req?.user.id }, raw: true });
 
@@ -140,38 +140,6 @@ const onboarding = asyncErrorHandler(async (req, res) => {
   });
 });
 
-const updateProfile = asyncErrorHandler(async (req, res) => {
-  const image = req.file;
-
-  if (!image) {
-    return res.status(STATUS_CODES.REQUIRED).json({
-      statusCode: STATUS_CODES.REQUIRED,
-      message: "Image is required",
-    });
-  }
-
-  const base64Image = `data:${image.mimetype};base64,${image.buffer.toString(
-    "base64"
-  )}`;
-  const uploadresponse = await cloudinary.uploader.upload(base64Image);
-
-  await User.update(
-    { profilePic: uploadresponse.secure_url },
-    {
-      where: {
-        id: req.user.id,
-      },
-      returning: true,
-    }
-  );
-  const data = await User.findByPk(req.user?.id);
-  res.status(STATUS_CODES.SUCCESS).json({
-    statusCode: STATUS_CODES.SUCCESS,
-    message: "Profile updateded",
-    data: data,
-  });
-});
-
 const checkAuth = asyncErrorHandler(async (req, res) => {
   const user = await User.findByPk(req.user.id);
 
@@ -187,6 +155,5 @@ module.exports = {
   login,
   logout,
   onboarding,
-  updateProfile,
   checkAuth,
 };

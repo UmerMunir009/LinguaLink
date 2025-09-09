@@ -44,7 +44,7 @@ module.exports = {
       PROFILE_UPDATED : "Profile Updated",
       UPDATE_FAILED : "Update failed",
       LOGOUT:'Logout successfully',
-      SUCCESS:'Generated Successfully',
+      SUCCESS:'Operation Success',
       ERROR:"Internal server error"
       
     },
