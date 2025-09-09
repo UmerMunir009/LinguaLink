@@ -216,5 +216,6 @@ module.exports = {
   friendReq,
   acceptReq,
   rejectReq,
-  getPendingRequests
+  getPendingRequests,
+  getOutgoingRequests
 };

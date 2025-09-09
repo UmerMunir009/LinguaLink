@@ -10,5 +10,6 @@ router.patch("/friend-request/:id/accept", userServices.acceptReq); //send reqID
 router.patch("/friend-request/:id/reject", userServices.rejectReq); //send reqID
 
 router.get("/friend-request/pending", userServices.getPendingRequests);
+router.get("/friend-request/outgoing", userServices.getOutgoingRequests);
 
 module.exports = router;
