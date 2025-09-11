@@ -62,7 +62,7 @@ const login = asyncErrorHandler(async (req, res) => {
   if (!user) {
     return res.status(STATUS_CODES.NOT_FOUND).json({
       statusCode: STATUS_CODES.NOT_FOUND,
-      message: "Email doesnot exists",
+      message: "Email does not exists",
     });
   }
 
@@ -106,7 +106,7 @@ const logout = asyncErrorHandler(async (req, res) => {
 
 
 const onboarding = asyncErrorHandler(async (req, res) => {
-  const {bio, nativeLanguage, learningLanguage, location} = req.body;
+  const {bio, nativeLanguage, learningLanguage, location,updatedPic} = req.body;
 
   const user = await User.findOne({ where: { id: req?.user.id }, raw: true });
 
@@ -117,7 +117,7 @@ const onboarding = asyncErrorHandler(async (req, res) => {
     });
   }
   
-  await User.update({ bio, nativeLanguage, learningLanguage, location, isOnBoarded: true },
+  await User.update({ bio,profilePic:updatedPic, nativeLanguage, learningLanguage, location, isOnBoarded: true },
       { where: { id: req.user.id } }
    );
 

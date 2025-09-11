@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
+import OnboardingPage from "./pages/OnboardingPage";
 
 import { useAuth } from "./customHooks/useAuth";
 import { authStore } from "./store/authStore";
@@ -20,22 +21,47 @@ const App = () => {
       </div>
     );
   }
+
+  const ProtectedRoute = ({ children, authUser }) => {
+    if (!authUser) return <Navigate to="/sign-up" replace />; 
+    if (!authUser.isOnBoarded) return <Navigate to="/onboarding" replace />; 
+    return children; 
+  };
+
   return (
     <div>
       <Toaster position="top-right" />
       <Routes>
         <Route
           path="/"
-          element={authUser ? <HomePage /> : <Navigate to={"/sign-up"} />}
+          element={
+            <ProtectedRoute authUser={authUser}>
+              <HomePage />
+            </ProtectedRoute>
+          }
         />
+
         <Route
           path="/sign-up"
-          element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />}
+          element={!authUser ? <SignUpPage /> : <Navigate to="/" replace />}
         />
+
         <Route
           path="/login"
-          element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
+          element={!authUser ? <LoginPage /> : <Navigate to="/" replace />}
         />
+
+        <Route
+          path="/onboarding"
+          element={
+            authUser && !authUser.isOnBoarded ? (
+              <OnboardingPage />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+
       </Routes>
     </div>
   );

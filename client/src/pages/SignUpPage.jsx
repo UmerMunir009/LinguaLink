@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { useAuth } from "./../customHooks/useAuth";
 import { Loader } from "lucide-react";
 import { showErrorToast, showSuccessToast } from "../utils/toast";
+import { Link } from "react-router-dom";
 
 const SignUpPage = () => {
   const { signUp, signingUp } = useAuth();
@@ -117,9 +118,9 @@ const SignUpPage = () => {
 
             <p className="mt-4 text-sm text-gray-400">
               Already have an account?{" "}
-              <span className="text-green-500 underline cursor-pointer">
+             <Link to="/login" className="link link-primary text-green-500 underline cursor-pointer">
                 Sign in
-              </span>
+              </Link>
             </p>
           </form>
         </div>
