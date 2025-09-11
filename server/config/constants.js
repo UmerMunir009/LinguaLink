@@ -23,7 +23,7 @@ module.exports = {
       OTP_VERIFIED: "Otp verified Successfully!",
       INVALID_OTP: "Invalid Otp",
       INVALID_AUTH_TOKEN: "Invalid auth token!",
-      NO_AUTH_GIVEN: "No auth given",
+      NO_AUTH_GIVEN: "Not Authenticated",
       UN_AUTHORIZED: "Unauthorized access",
       EMAIL_VERIFIED: "Email verified!",
       PAYMENT_DONE: "Payment Done successfully!",
