@@ -19,114 +19,124 @@ const SignUpPage = () => {
       );
       return;
     }
-    const data = {
-      name: fullName,
-      email,
-      password,
-    };
+    const data = { name: fullName, email, password };
     await signUp(data);
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-900 text-white">
-      <div className="md:w-1/2 flex flex-col justify-center items-center p-8">
-        <h1 className="text-3xl font-bold mb-6 text-green-500">LinguaLink</h1>
-        <p className="mb-8 text-gray-400">
-          Join LinguaLink and start your language learning journey
-        </p>
-        <form
-          className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg"
-          onSubmit={handleSubmit}
-        >
-          <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium">Full Name</label>
-            <input
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full p-3 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="XYZ"
-              required
+    <div className="min-h-screen bg-gray-900 flex justify-center items-center p-4">
+      <div className="max-w-6xl w-full border-1 border-green-600 rounded-lg shadow-lg flex flex-col md:flex-row overflow-hidden">
+        <div className="md:w-1/2 bg-gray-900 p-3 md:p-6 flex flex-col justify-center items-center">
+          <div className="flex flex-row justify-center items-center mb-2">
+            <img
+              src="src/assets/logo.png"
+              alt="Logo"
+              className="h-10 w-10 "
             />
+            <h1 className="text-3xl font-bold text-green-500">LinguaLink</h1>
           </div>
-          <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="hello@example.com"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="********"
-              required
-            />
-            <p className="text-xs text-gray-400 mt-1">
-              Password must be at least 6 characters long
-            </p>
-          </div>
-          <div className="flex items-center mb-6">
-            <input
-              type="checkbox"
-              checked={agree}
-              onChange={() => setAgree(!agree)}
-              className="mr-2 accent-green-500 cursor-pointer"
-            />
-            <p className="text-sm text-gray-400">
-              I agree to the{" "}
+
+          <p className="mb-5 text-gray-300 text-center text-sm">
+            Join LinguaLink and start your language learning journey
+          </p>
+
+          <form
+            className="bg-gray-800 p-4 rounded-lg shadow-inner w-full"
+            onSubmit={handleSubmit}
+          >
+            <div className="mb-4">
+              <label className="block mb-2 text-sm font-medium">
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="XYZ"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block mb-2 text-sm font-medium">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="hello@example.com"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block mb-2 text-sm font-medium">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="********"
+                required
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Password must be at least 6 characters long
+              </p>
+            </div>
+
+            <div className="flex items-center mb-6">
+              <input
+                type="checkbox"
+                checked={agree}
+                onChange={() => setAgree(!agree)}
+                className="mr-2 accent-green-500 cursor-pointer"
+              />
+              <p className="text-xs md:text-sm text-gray-400">
+                I agree to the{" "}
+                <span className="text-green-500 underline cursor-pointer">
+                  terms of service
+                </span>{" "}
+                and{" "}
+                <span className="text-green-500 underline cursor-pointer">
+                  privacy policy
+                </span>
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-green-500 hover:bg-green-600 text-white p-3 cursor-pointer rounded font-semibold flex justify-center items-center"
+            >
+              {signingUp ? (
+                <Loader size={20} className="animate-spin" />
+              ) : (
+                "Create Account"
+              )}
+            </button>
+
+            <p className="mt-4 text-sm text-gray-400">
+              Already have an account?{" "}
               <span className="text-green-500 underline cursor-pointer">
-                terms of service
-              </span>{" "}
-              and{" "}
-              <span className="text-green-500 underline cursor-pointer">
-                privacy policy
+                Sign in
               </span>
             </p>
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-green-500 hover:bg-green-600 text-white p-3 cursor-pointer rounded font-semibold flex justify-center items-center"
-          >
-            {signingUp ? (
-              <Loader size={20} className="animate-spin" />
-            ) : (
-              "Create Account"
-            )}
-          </button>
+          </form>
+        </div>
 
-          <p className="mt-4 text-sm text-gray-400">
-            Already have an account?{" "}
-            <span className="text-green-500 underline cursor-pointer">
-              Sign in
-            </span>
+        <div className="md:w-1/2 bg-green-900 p-8 flex flex-col justify-center items-center">
+          <img
+            className="h-50 sm:h-70"
+            src="src/assets/sign_up_pic.png"
+            alt=""
+          />
+          <h2 className="text-white text-sm sm:text-lg font-bold mb-2 text-center">
+            Connect with language partners worldwide
+          </h2>
+          <p className="text-gray-300 text-xs sm:text-md text-center">
+            Practice conversations, make friends, and improve your language
+            skills together
           </p>
-        </form>
-      </div>
-
-      {/* Right Side */}
-      <div className="md:w-1/2 flex justify-center items-center p-8">
-        <div className="bg-green-900 rounded-lg p-6 w-full max-w-md flex flex-col items-center">
-          <div className="bg-green-800 rounded-lg p-4 w-full flex flex-col items-center">
-            <div className="w-32 h-32 bg-gray-700 rounded-full mb-4 flex items-center justify-center">
-              <span className="text-white text-2xl">👤</span>
-            </div>
-            <h2 className="text-white text-lg font-bold mb-2">
-              Connect with language partners worldwide
-            </h2>
-            <p className="text-gray-300 text-center">
-              Practice conversations, make friends, and improve your language
-              skills together
-            </p>
-          </div>
         </div>
       </div>
     </div>
