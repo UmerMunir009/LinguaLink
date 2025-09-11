@@ -4,6 +4,9 @@ import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import OnboardingPage from "./pages/OnboardingPage";
+import FriendsPage from "./pages/FriendsPage";
+import NotificationPage from "./pages/NotificationPage";
+import Layout from "./pages/Layout";
 
 import { useAuth } from "./customHooks/useAuth";
 import { authStore } from "./store/authStore";
@@ -23,23 +26,39 @@ const App = () => {
   }
 
   const ProtectedRoute = ({ children, authUser }) => {
-    if (!authUser) return <Navigate to="/sign-up" replace />; 
-    if (!authUser.isOnBoarded) return <Navigate to="/onboarding" replace />; 
-    return children; 
+    if (!authUser) return <Navigate to="/sign-up" replace />;
+    if (!authUser.isOnBoarded) return <Navigate to="/onboarding" replace />;
+    return children;
   };
 
   return (
     <div>
       <Toaster position="top-right" />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute authUser={authUser}>
-              <HomePage />
-            </ProtectedRoute>
-          }
-        />
+
+        <Route path="/" element={<Layout />}>
+          <Route index element={
+              <ProtectedRoute authUser={authUser}>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="friends" element={
+              <ProtectedRoute authUser={authUser}>
+                <FriendsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="notifications" element={
+              <ProtectedRoute authUser={authUser}>
+                <NotificationPage />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
 
         <Route
           path="/sign-up"
@@ -61,7 +80,6 @@ const App = () => {
             )
           }
         />
-
       </Routes>
     </div>
   );
