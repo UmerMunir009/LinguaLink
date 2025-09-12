@@ -27,7 +27,11 @@ const Layout = () => {
           <Bell className="w-5 h-5 cursor-pointer hover:text-green-300" />
           <MessageSquare className="w-5 h-5 cursor-pointer hover:text-green-300" />
           <User className="w-5 h-5 cursor-pointer hover:text-green-300" />
-          <Settings className="w-5 h-5 cursor-pointer hover:text-green-300" />
+           <img
+          src={authUser?.profilePic}
+          alt="User avatar"
+          className="w-9 h-9 rounded-full mx-auto cursor-pointer border-2 border-green-500"
+        />
         </div>
 
         {sideBar ? (

@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [isCheckingAuth, setCheckingAuth] = useState(true);
   const [signingUp, setSigningUp] = useState(false);
   const [logging, setLogging] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
 
   const checkAuth = async () => {
@@ -19,7 +20,7 @@ export const AuthProvider = ({ children }) => {
       setAuthUser(response.data.data);
     } catch (error) {
       if (error.response) {
-        showErrorToast(error.response.data.message);
+        console.log(error.response.data.message);
       } else if (error.request) {
         showErrorToast("No response from server.");
       } else {
@@ -86,7 +87,7 @@ export const AuthProvider = ({ children }) => {
      const { email,password } = formData;
       const response = await axiosInstance.post("/auth/login", {email,password});
       setAuthUser(response.data.data);
-      console.log(response.data.data)
+      showSuccessToast("Login Successfull");
     } catch (error) {
       if (error.response) {
         showErrorToast(error.response.data.message);
@@ -100,25 +101,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // const Logout = async () => {
-  //   try {
-  //     const response = await axiosInstance.post("/auth/logout");
-  //     toast.success(response.data.message);
-  //     localStorage.removeItem("token");
-  //     setAuthUser(null);
-  //     disconnectSocket(); //disconnecting right after the logout
-  //   } catch (error) {
-  //     if (error.response) {
-  //       toast.error(error.response.data.message);
-  //     } else if (error.request) {
-  //       toast.error("No response from server.");
-  //     } else {
-  //       toast.error("Unexpected error occurred.");
-  //     }
-  //   } finally {
-  //     setLogging(false);
-  //   }
-  // };
+  const Logout = async () => {
+    try {
+      setLoggingOut(true)
+      const response = await axiosInstance.post("/auth/logout");
+      showSuccessToast(response.data.message);
+      localStorage.removeItem("token");
+      setAuthUser(null);
+    } catch (error) {
+      if (error.response) {
+       console.log(error.response.data.message);
+      } else if (error.request) {
+        showErrorToast("No response from server.");
+      } else {
+        showErrorToast("Unexpected error occurred.");
+      }
+    } finally {
+      setLoggingOut(false);
+    }
+  };
 
   useEffect(() => {
     checkAuth();
@@ -133,7 +134,8 @@ export const AuthProvider = ({ children }) => {
         onboarding,
         logging,
         Login,
-        // Logout,
+        Logout,
+        loggingOut,
         isCheckingAuth,
       }}
     >

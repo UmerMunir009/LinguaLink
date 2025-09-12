@@ -12,6 +12,8 @@ export const userStore = create(persist((set, get) => ({
     friends:[],
     isFriendsLoading:false,
 
+    isPendingLoading:false,
+    pendingRequests:[],
 
      getNewLearners: async () => {
         set({ isNewLearnersLoading: true });
@@ -20,7 +22,7 @@ export const userStore = create(persist((set, get) => ({
           set({ newLearners: res.data.data });
         } catch (error) {
           if (error.response) {
-            showErrorToast(error.response.data.message);
+            console.log(error.response.data.message);
           } else if (error.request) {
             showErrorToast("No response from server.");
           } else {
@@ -38,7 +40,7 @@ export const userStore = create(persist((set, get) => ({
           set({ friends: res.data.data });
         } catch (error) {
           if (error.response) {
-            showErrorToast(error.response.data.message);
+            console.log(error.response.data.message);
           } else if (error.request) {
             showErrorToast("No response from server.");
           } else {
@@ -48,9 +50,42 @@ export const userStore = create(persist((set, get) => ({
           set({ isFriendsLoading: false });
         }
       },
+      
+      sendFriendReq: async (id) => {
+        try {
+          const res = await axiosInstance.post(`/users/friend-request/${id}`);
+        } catch (error) {
+          if (error.response) {
+            console.log(error.response.data.message);
+          } else if (error.request) {
+            showErrorToast("No response from server.");
+          } else {
+            showErrorToast("Unexpected error occurred.");
+          }
+        } finally {
+          showSuccessToast('Request Sent')
+        }
+      },
 
+      getPendingRequests: async () => {
+         try {
+           set({ isPendingLoading: true });
+           const res = await axiosInstance.get("users/friend-request/pending");
+           set({ pendingRequests: res.data.data });
+         } catch (error) {
+           if (error.response) {
+             console.log(error.response.data.message);
+           } else if (error.request) {
+             showErrorToast("No response from server.");
+           } else {
+             showErrorToast("Unexpected error occurred.");
+           }
+         } finally {
+           set({ isPendingLoading: false });
+         }
+       },
 
-}),{
+    }),{
       name: "test",
       partialize: (state) => ({
         newLearners: state.newLearners,

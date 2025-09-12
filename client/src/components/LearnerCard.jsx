@@ -1,8 +1,20 @@
 import { UserPlus } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { userStore } from "../store/userStore";
 
 const LearnerCard = ({ learner }) => {
+  const {sendFriendReq,getNewLearners}=userStore();
+    const [isSending, setIsSending] = useState(false);
+
+  const handleReqSent=async(id)=>{
+    setIsSending(true)
+    await sendFriendReq(id);
+    setIsSending(false)
+    getNewLearners()
+  }
+
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -46,13 +58,14 @@ const LearnerCard = ({ learner }) => {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        onClick={()=>handleReqSent(learner.id)}
         className="mt-6 w-full flex justify-center items-center gap-2 
                    bg-green-600/90 hover:bg-green-500 text-white cursor-pointer
                    py-2.5 rounded-xl font-semibold tracking-wide 
                    shadow-md shadow-green-900/40 transition-colors"
       >
         <UserPlus className="w-5 h-5" />
-        Send Friend Request
+        {isSending ?"Sending...":"Send Friend Request"}
       </motion.button>
     </motion.div>
   );

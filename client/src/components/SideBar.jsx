@@ -11,15 +11,21 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { authStore } from "../store/authStore";
+import {useAuth} from '../customHooks/useAuth'
 
 const Sidebar = ({ sidebar, setSidebar }) => {
   const { authUser } = authStore();
+  const {loggingOut,Logout}=useAuth()
 
   const navItems = [
     { to: "/", label: "Home", Icon: House },
     { to: "/friends", label: "Friends", Icon: SquarePen },
     { to: "/notifications", label: "Notifications", Icon: Hash },
   ];
+
+  const handleLogout=()=>{
+    Logout()
+  }
 
   return (
     <div
@@ -44,7 +50,6 @@ const Sidebar = ({ sidebar, setSidebar }) => {
           <Bell className="w-5 h-5 cursor-pointer hover:text-green-300" />
           <MessageSquare className="w-5 h-5 cursor-pointer hover:text-green-300" />
           <User className="w-5 h-5 cursor-pointer hover:text-green-300" />
-          <Settings className="w-5 h-5 cursor-pointer hover:text-green-300" />
         </div>
 
         <div className="my-6 px-3">
@@ -79,12 +84,13 @@ const Sidebar = ({ sidebar, setSidebar }) => {
 
       <div className="mt-auto">
         <div
+        onClick={()=>handleLogout()}
           className="flex justify-center items-center px-5 py-3 cursor-pointer 
                   bg-red-600 hover:bg-red-700 transition-colors rounded-md mx-3 mb-4 shadow-md"
         >
           <LogOut className="text-white w-5 mr-2" />
           <p className="text-white font-bold text-md uppercase tracking-wide">
-            Sign Out
+            {loggingOut?'Singing Out...':'Sign Out'}
           </p>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { authStore } from "../store/authStore";
 import { useAuth } from "../customHooks/useAuth";
 import { showErrorToast, showSuccessToast } from "../utils/toast";
 
+
 export default function CompleteProfile() {
   const { authUser } = authStore();
   const {onboarding,onBoard}=useAuth()

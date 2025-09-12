@@ -171,7 +171,7 @@ const pendingReqs = await Friend.findAll({
   include: [
     {
       model: User,as: "user", 
-      attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic"],
+      attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic","location"],
     },
   ],
 });
