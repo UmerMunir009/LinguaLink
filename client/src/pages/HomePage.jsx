@@ -1,14 +1,14 @@
 import React from "react";
+import NewLearners from "../components/NewLearners";
+import Friends from "../components/Friends";
 
 const HomePage = () => {
   return (
     <div
-      className="min-h-screen bg-gradient-to-tr from-black via-gray-900 to-green-700
-
-
-"
+      className="min-h-screen bg-gray-900"
     >
-      Home
+      <Friends/>
+      <NewLearners/>
     </div>
   );
 };

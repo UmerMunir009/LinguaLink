@@ -24,14 +24,13 @@ const Sidebar = ({ sidebar, setSidebar }) => {
   return (
     <div
       className={`fixed top-14 bottom-0 left-0 z-10 
-      w-[60%] sm:w-80 flex flex-col 
-      transition-transform duration-300 ease-in-out
-      bg-gradient-to-tr from-black via-gray-900 to-green-800
+  w-[50%] sm:w-60 lg:w-72 flex flex-col 
+  transition-transform duration-300 ease-in-out
+  bg-gradient-to-tr from-black via-gray-900 to-green-800
  text-green-400
-      ${sidebar ? "translate-x-0" : "max-sm:-translate-x-full"}`}
+  ${sidebar ? "translate-x-0" : "max-md:-translate-x-full"}`}
     >
       <div className="mt-7 w-full">
-        {/* Profile */}
         <img
           src={authUser?.profilePic}
           alt="User avatar"
@@ -41,15 +40,13 @@ const Sidebar = ({ sidebar, setSidebar }) => {
           {authUser?.name}
         </h1>
 
-        {/* Quick Actions (Mobile Only) */}
-        <div className="mt-5 flex sm:hidden justify-center items-center gap-6 text-green-400">
+        <div className="mt-5 flex md:hidden justify-center items-center gap-6 text-green-400">
           <Bell className="w-5 h-5 cursor-pointer hover:text-green-300" />
           <MessageSquare className="w-5 h-5 cursor-pointer hover:text-green-300" />
           <User className="w-5 h-5 cursor-pointer hover:text-green-300" />
           <Settings className="w-5 h-5 cursor-pointer hover:text-green-300" />
         </div>
 
-        {/* Navigation */}
         <div className="my-6 px-3">
           {navItems.map(({ to, label, Icon }) => (
             <NavLink
@@ -80,7 +77,6 @@ const Sidebar = ({ sidebar, setSidebar }) => {
         </div>
       </div>
 
-
       <div className="mt-auto">
         <div
           className="flex justify-center items-center px-5 py-3 cursor-pointer 
@@ -97,5 +93,3 @@ const Sidebar = ({ sidebar, setSidebar }) => {
 };
 
 export default Sidebar;
-
-//bg-gradient-to-tr from-black via-gray-900 to-green-700

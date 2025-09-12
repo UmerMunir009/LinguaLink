@@ -3,7 +3,7 @@ const userServices = require("../../services/users/index");
 
 
 router.get("/users/recommended", userServices.recommendedUsers);
-router.get("/users/:id/friends", userServices.userFriends);
+router.get("/users/friends", userServices.userFriends);
 
 router.post("/friend-request", userServices.friendReq);//send friendId
 router.patch("/friend-request/:id/accept", userServices.acceptReq); //send reqID

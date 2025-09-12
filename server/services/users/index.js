@@ -14,20 +14,18 @@ const recommendedUsers = asyncErrorHandler(async (req, res) => {
     attributes: ["userId", "friendId"],
     raw: true,
   });
-  console.log(friendships)
 
   //getting frind ids
   const friendIds = friendships.map(f =>
     f.userId === req.user.id ? f.friendId : f.userId
   );
-  console.log(friendIds)
 
   const users = await User.findAll({
     where: {
       id: { [Op.notIn]: [req.user.id, ...friendIds] },
       isOnBoarded: true,
     },
-    attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic"],
+    attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic","location"],
   });
 
   res.status(STATUS_CODES.SUCCESS).json({
@@ -60,7 +58,7 @@ const userFriends = asyncErrorHandler(async (req, res) => {
       id: { [Op.in]: [...friendIds] },
       isOnBoarded: true,
     },
-    attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic"],
+    attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic","location"],
   });
  
 
