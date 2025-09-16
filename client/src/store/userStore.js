@@ -15,6 +15,10 @@ export const userStore = create(persist((set, get) => ({
     isPendingLoading:false,
     pendingRequests:[],
 
+    isAcceptingRequest:false,
+    isRejectingRequest:false,
+    
+
      getNewLearners: async () => {
         set({ isNewLearnersLoading: true });
         try {
@@ -64,6 +68,42 @@ export const userStore = create(persist((set, get) => ({
           }
         } finally {
           showSuccessToast('Request Sent')
+        }
+      },
+
+      acceptFriendReq: async (id) => {
+        try {
+          set({ isAcceptingRequest: true });
+          await axiosInstance.patch(`/users/friend-request/${id}/accept`);
+        } catch (error) {
+          if (error.response) {
+            console.log(error.response.data.message);
+          } else if (error.request) {
+            showErrorToast("No response from server.");
+          } else {
+            showErrorToast("Unexpected error occurred.");
+          }
+        } finally {
+          set({ isAcceptingRequest: false });
+          showSuccessToast('Request Accepted')
+        }
+      },
+
+      rejectFriendReq: async (id) => {
+        try {
+          set({ isRejectingRequest: true });
+          await axiosInstance.patch(`/users/friend-request/${id}/accept`);
+        } catch (error) {
+          if (error.response) {
+            console.log(error.response.data.message);
+          } else if (error.request) {
+            showErrorToast("No response from server.");
+          } else {
+            showErrorToast("Unexpected error occurred.");
+          }
+        } finally {
+          set({ isRejectingRequest: false });
+          showSuccessToast('Request Rejected')
         }
       },
 

@@ -4,13 +4,33 @@ import { X, Loader2 } from "lucide-react";
 import { userStore } from "../store/userStore";
 
 const FriendRequestsModal = ({ isOpen, onClose }) => {
-  const {getPendingRequests,pendingRequests,isPendingLoading} = userStore();
+  const {
+    getPendingRequests,
+    pendingRequests,
+    isPendingLoading,
+    acceptFriendReq,
+    rejectFriendReq,
+    getFriends,
+    isAcceptingRequest,
+    isRejectingRequest,
+  } = userStore();
 
   useEffect(() => {
     if (isOpen) {
       getPendingRequests();
     }
   }, [isOpen, getPendingRequests]);
+
+  const acceptRequest = async (id) => {
+    await acceptFriendReq(id);
+    await getPendingRequests();
+    await getFriends();
+  };
+  const rejectRequest = async (id) => {
+    await rejectFriendReq(id);
+    await getPendingRequests();
+    await getFriends();
+  };
 
   return (
     <AnimatePresence>
@@ -19,7 +39,7 @@ const FriendRequestsModal = ({ isOpen, onClose }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex mx-3  justify-center items-center z-50"
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex mx-3 justify-center items-center z-50"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -29,7 +49,6 @@ const FriendRequestsModal = ({ isOpen, onClose }) => {
             className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-xl 
                        border border-green-700/40 w-full max-w-2xl p-6 relative"
           >
-
             <button
               onClick={onClose}
               className="absolute top-3 right-3 cursor-pointer text-gray-400 hover:text-white"
@@ -37,8 +56,13 @@ const FriendRequestsModal = ({ isOpen, onClose }) => {
               <X size={22} />
             </button>
 
-            <h2 className="text-xl font-bold text-white mb-4">
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               Friend Requests
+              {pendingRequests.length > 0 && !isPendingLoading && (
+                <span className="text-sm bg-green-700/40 text-green-400 px-2 py-0.5 rounded-md">
+                  {pendingRequests?.length}
+                </span>
+              )}
             </h2>
 
             {isPendingLoading ? (
@@ -64,9 +88,13 @@ const FriendRequestsModal = ({ isOpen, onClose }) => {
                         className="w-12 h-12 rounded-full border-2 border-green-500"
                       />
                       <div>
-                        <h3 className="text-white font-semibold">{req?.user.name}</h3>
-                        <p className="text-xs text-gray-400">{req?.user.location}</p>
-                        <div className="flex gap-2 mt-1">
+                        <h3 className="text-white font-semibold">
+                          {req?.user.name}
+                        </h3>
+                        <p className="text-xs text-gray-400">
+                          {req?.user.location}
+                        </p>
+                        <div className="flex gap-2 mt-1 flex-wrap">
                           <span className="text-[8px] sm:text-xs px-2 py-0.5 bg-green-900/40 text-green-400 rounded-md">
                             🌐 Native: {req?.user.nativeLanguage}
                           </span>
@@ -79,16 +107,22 @@ const FriendRequestsModal = ({ isOpen, onClose }) => {
 
                     <div className="flex gap-2">
                       <button
-                        // onClick={() => acceptRequest(req.id)}
+                        onClick={() => acceptRequest(req.id)}
                         className="px-10 sm:px-3 py-1.5 bg-green-600 cursor-pointer hover:bg-green-500 text-white text-sm rounded-lg"
                       >
-                        Accept
+                        {isAcceptingRequest ? (
+                         'Accepting...'
+                        ) : (
+                          "Accept"
+                        )}
                       </button>
                       <button
-                        // onClick={() => rejectRequest(req.id)}
+                        onClick={() => rejectRequest(req.id)}
                         className="px-10 sm:px-3 py-1.5 bg-red-600 cursor-pointer hover:bg-red-500 text-white text-sm rounded-lg"
                       >
-                        Reject
+                       {isRejectingRequest ? ('Rejecting...') : (
+                          "Reject"
+                        )}
                       </button>
                     </div>
                   </motion.div>
