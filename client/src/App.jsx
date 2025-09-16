@@ -7,6 +7,7 @@ import OnboardingPage from "./pages/OnboardingPage";
 import FriendsPage from "./pages/FriendsPage";
 import NotificationPage from "./pages/NotificationPage";
 import Layout from "./pages/Layout";
+import ChatPage from "./pages/ChatPage";
 
 import { useAuth } from "./customHooks/useAuth";
 import { authStore } from "./store/authStore";
@@ -90,6 +91,14 @@ const App = () => {
                 )
               }
             />
+            <Route
+                path="/chat/:id"
+                element={
+                  <ProtectedRoute authUser={authUser}>
+                    <ChatPage />
+                  </ProtectedRoute>
+                }
+              />
           </Routes>
         </motion.div>
       </AnimatePresence>
