@@ -1,18 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
 import { userStore } from "../store/userStore";
 
+
 const FriendRequestsModal = ({ isOpen, onClose }) => {
+  const [loadingIds, setLoadingIds] = useState({
+    accepting: null,
+    rejecting: null,
+  });
+
   const {
     getPendingRequests,
     pendingRequests,
     isPendingLoading,
     acceptFriendReq,
     rejectFriendReq,
-    getFriends,
-    isAcceptingRequest,
-    isRejectingRequest,
+    getFriends
   } = userStore();
 
   useEffect(() => {
@@ -22,14 +26,19 @@ const FriendRequestsModal = ({ isOpen, onClose }) => {
   }, [isOpen, getPendingRequests]);
 
   const acceptRequest = async (id) => {
+    setLoadingIds((prev) => ({ ...prev, accepting: id }));
     await acceptFriendReq(id);
     await getPendingRequests();
     await getFriends();
+    setLoadingIds((prev) => ({ ...prev, accepting: null }));
   };
+
   const rejectRequest = async (id) => {
+    setLoadingIds((prev) => ({ ...prev, rejecting: id }));
     await rejectFriendReq(id);
     await getPendingRequests();
     await getFriends();
+    setLoadingIds((prev) => ({ ...prev, rejecting: null }));
   };
 
   return (
@@ -110,19 +119,18 @@ const FriendRequestsModal = ({ isOpen, onClose }) => {
                         onClick={() => acceptRequest(req.id)}
                         className="px-10 sm:px-3 py-1.5 bg-green-600 cursor-pointer hover:bg-green-500 text-white text-sm rounded-lg"
                       >
-                        {isAcceptingRequest ? (
-                         'Accepting...'
-                        ) : (
-                          "Accept"
-                        )}
+                        {loadingIds.accepting === req.id
+                          ? "Accepting..."
+                          : "Accept"}
                       </button>
+
                       <button
                         onClick={() => rejectRequest(req.id)}
                         className="px-10 sm:px-3 py-1.5 bg-red-600 cursor-pointer hover:bg-red-500 text-white text-sm rounded-lg"
                       >
-                       {isRejectingRequest ? ('Rejecting...') : (
-                          "Reject"
-                        )}
+                        {loadingIds.rejecting === req.id
+                          ? "Rejecting..."
+                          : "Reject"}
                       </button>
                     </div>
                   </motion.div>

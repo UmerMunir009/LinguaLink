@@ -9,7 +9,6 @@ export const chatStore = create((set) => ({
        
 
      getStreamToken: async () => {
-        // set({ isNewLearnersLoading: true });
         try {
           const res = await axiosInstance.get("/chat/stream-token");
           set({ streamToken: res.data.token });
@@ -22,8 +21,6 @@ export const chatStore = create((set) => ({
           } else {
             showErrorToast("Unexpected error occurred.");
           }
-        } finally {
-        //   set({ isNewLearnersLoading: false });
         }
       },
 }));

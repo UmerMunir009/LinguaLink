@@ -8,6 +8,7 @@ import FriendsPage from "./pages/FriendsPage";
 import NotificationPage from "./pages/NotificationPage";
 import Layout from "./pages/Layout";
 import ChatPage from "./pages/ChatPage";
+import CallPage from './pages/CallPage'
 
 import { useAuth } from "./customHooks/useAuth";
 import { authStore } from "./store/authStore";
@@ -22,7 +23,7 @@ const App = () => {
 
   if (isCheckingAuth && !authUser) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex bg-gray-900 justify-center items-center h-screen">
         <Loader size={40} className="text-green-500 animate-spin" />
       </div>
     );
@@ -96,6 +97,15 @@ const App = () => {
                 element={
                   <ProtectedRoute authUser={authUser}>
                     <ChatPage />
+                  </ProtectedRoute>
+                }
+              />
+
+            <Route
+                path="/call/:id"
+                element={
+                  <ProtectedRoute authUser={authUser}>
+                    <CallPage />
                   </ProtectedRoute>
                 }
               />

@@ -2,6 +2,7 @@ import { UserPlus } from "lucide-react";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { userStore } from "../store/userStore";
+import { StreamChat } from "stream-chat";
 
 const LearnerCard = ({ learner }) => {
   const {sendFriendReq,getNewLearners}=userStore();

@@ -4,7 +4,6 @@ import { authStore } from "../store/authStore";
 import { chatStore } from "../store/chatStore";
 import {
   Channel,
-  ChannelHeader,
   Chat,
   MessageInput,
   MessageList,
@@ -14,6 +13,7 @@ import {
 import { StreamChat } from "stream-chat";
 import { showErrorToast } from "../utils/toast";
 import { Loader2 } from "lucide-react";
+import ChatHeader from "../components/ChatHeader";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
@@ -33,9 +33,10 @@ const ChatPage = () => {
   const [channel, setChannel] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  let client;
+
   useEffect(() => {
     if (!authUser) return;
-    let client;
 
     const initChat = async () => {
       let token = streamToken;
@@ -51,7 +52,8 @@ const ChatPage = () => {
             name: authUser.name,
             image: authUser.profilePic || undefined,
           },
-          token
+          token,
+            { enable_presence: true }
         );
 
         const channelId = generateChannelId(authUser.id, targetUserId);
@@ -60,7 +62,8 @@ const ChatPage = () => {
         const newChannel = client.channel("messaging", channelId, {
           members: [authUser.id, targetUserId],
         });
-        await newChannel.watch();
+
+        await newChannel.watch({ presence: true });
 
         setChatClient(client);
         setChannel(newChannel);
@@ -94,7 +97,7 @@ const ChatPage = () => {
       <Chat client={chatClient} theme="messaging dark">
         <Channel channel={channel}>
           <Window>
-            <ChannelHeader />
+            <ChatHeader currentUserId={authUser.id} client={chatClient}/>
             <MessageList />
             <MessageInput focus />
           </Window>

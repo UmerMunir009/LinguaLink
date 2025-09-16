@@ -1,8 +1,15 @@
 import { MessageCircle, UserPlus } from "lucide-react";
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const FriendCard = ({ friend }) => {
+
+  const navigate=useNavigate()
+  const openChat = (friendId) => {
+    navigate(`/chat/${friendId}`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -42,6 +49,7 @@ const FriendCard = ({ friend }) => {
       </div>
 
       <motion.button
+      onClick={()=>openChat(friend.id)}
   whileHover={{ scale: 1.05 }}
   whileTap={{ scale: 0.95 }}
   className="mt-6 w-full flex justify-center items-center gap-2

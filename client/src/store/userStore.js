@@ -92,7 +92,7 @@ export const userStore = create(persist((set, get) => ({
       rejectFriendReq: async (id) => {
         try {
           set({ isRejectingRequest: true });
-          await axiosInstance.patch(`/users/friend-request/${id}/accept`);
+          await axiosInstance.patch(`/users/friend-request/${id}/reject`);
         } catch (error) {
           if (error.response) {
             console.log(error.response.data.message);
