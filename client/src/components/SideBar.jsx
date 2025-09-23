@@ -8,6 +8,7 @@ import {
   MessageSquare,
   User,
   Settings,
+  Landmark,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { authStore } from "../store/authStore";
@@ -20,7 +21,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
   const navItems = [
     { to: "/", label: "Home", Icon: House },
     { to: "/friends", label: "Friends", Icon: SquarePen },
-    { to: "/culturalFeed", label: "Cultural Exchange", Icon: Hash },
+    { to: "/culturalFeed", label: "Cultural Exchange", Icon: Landmark },
   ];
 
   const handleLogout=()=>{
@@ -74,7 +75,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
                       isActive ? "text-green-300" : "text-green-400"
                     }`}
                   />
-                  <span>{label}</span>
+                  <span className="text-[10px] sm:text-[16px]">{label}</span>
                 </>
               )}
             </NavLink>
