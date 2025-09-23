@@ -17,6 +17,7 @@ import { Toaster } from "react-hot-toast";
 
 import { AnimatePresence, motion } from "framer-motion";
 import CulturalExchangePage from "./pages/CulturalExchangePage";
+import MyPostsPage from "./pages/MyPostsPage";
 
 const App = () => {
   const { isCheckingAuth } = useAuth();
@@ -66,10 +67,18 @@ const App = () => {
                 }
               />
               <Route
-                path="culturalFeed"
+                path="cultural-feed"
                 element={
                   <ProtectedRoute authUser={authUser}>
                     <CulturalExchangePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="my-posts"
+                element={
+                  <ProtectedRoute authUser={authUser}>
+                    <MyPostsPage />
                   </ProtectedRoute>
                 }
               />

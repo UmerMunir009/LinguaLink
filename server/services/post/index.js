@@ -73,8 +73,55 @@ const getFeed = asyncErrorHandler(async (req, res) => {
 });
 
 
+const getUserPosts = asyncErrorHandler(async (req, res) => {
+  const data = await Post.findAll({
+    where: {
+      userId:req.user.id
+    },
+    order: [["createdAt", "DESC"]],
+
+  });
+  res.status(STATUS_CODES.SUCCESS).json({
+    statusCode: STATUS_CODES.SUCCESS,
+    message: TEXTS.SUCCESS,
+    data: data,
+  });
+});
+
+
+const deletePost = asyncErrorHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const post = await Post.findByPk(id);
+
+  if (!post) {
+    return res.status(STATUS_CODES.NOT_FOUND).json({
+      statusCode: STATUS_CODES.NOT_FOUND,
+      message: "Post not found",
+    });
+  }
+
+  if (post.userId !== req.user.id) {
+    return res.status(STATUS_CODES.UNAUTHORIZED).json({
+      statusCode: STATUS_CODES.UNAUTHORIZED,
+      message: "You are not authorized to delete this post",
+    });
+  }
+
+  await post.destroy();
+
+  res.status(STATUS_CODES.SUCCESS).json({
+    statusCode: STATUS_CODES.SUCCESS,
+    message: "Post deleted successfully"
+  });
+});
+
+
+
 
 module.exports = {
   createPost,
-  getFeed
+  getFeed,
+  getUserPosts,
+  deletePost
 };

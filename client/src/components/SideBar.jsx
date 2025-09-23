@@ -9,6 +9,7 @@ import {
   User,
   Settings,
   Landmark,
+  FileText,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { authStore } from "../store/authStore";
@@ -21,7 +22,8 @@ const Sidebar = ({ sidebar, setSidebar }) => {
   const navItems = [
     { to: "/", label: "Home", Icon: House },
     { to: "/friends", label: "Friends", Icon: SquarePen },
-    { to: "/culturalFeed", label: "Cultural Exchange", Icon: Landmark },
+    { to: "/cultural-feed", label: "Cultural Exchange", Icon: Landmark },
+    { to: "/my-posts", label: "My Posts", Icon: FileText },
   ];
 
   const handleLogout=()=>{
