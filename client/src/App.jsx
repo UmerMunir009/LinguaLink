@@ -16,6 +16,7 @@ import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 import { AnimatePresence, motion } from "framer-motion";
+import CulturalExchangePage from "./pages/CulturalExchangePage";
 
 const App = () => {
   const { isCheckingAuth } = useAuth();
@@ -65,10 +66,10 @@ const App = () => {
                 }
               />
               <Route
-                path="notifications"
+                path="culturalFeed"
                 element={
                   <ProtectedRoute authUser={authUser}>
-                    <NotificationPage />
+                    <CulturalExchangePage />
                   </ProtectedRoute>
                 }
               />

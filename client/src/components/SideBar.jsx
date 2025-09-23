@@ -20,7 +20,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
   const navItems = [
     { to: "/", label: "Home", Icon: House },
     { to: "/friends", label: "Friends", Icon: SquarePen },
-    { to: "/notifications", label: "Notifications", Icon: Hash },
+    { to: "/culturalFeed", label: "Cultural Exchange", Icon: Hash },
   ];
 
   const handleLogout=()=>{
