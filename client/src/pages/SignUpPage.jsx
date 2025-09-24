@@ -30,7 +30,7 @@ const SignUpPage = () => {
         <div className="md:w-1/2 bg-gray-900 p-3 md:p-6 flex flex-col justify-center items-center">
           <div className="flex flex-row justify-center items-center mb-2">
             <img
-              src="src/assets/logo.png"
+              src="/logo.png"
               alt="Logo"
               className="h-10 w-10 "
             />
@@ -128,7 +128,7 @@ const SignUpPage = () => {
         <div className="md:w-1/2 bg-green-900 p-8 flex flex-col justify-center items-center">
           <img
             className="h-50 sm:h-70"
-            src="src/assets/sign_up_pic.png"
+            src="/sign_up_pic.png"
             alt=""
           />
           <h2 className="text-white text-sm sm:text-lg font-bold mb-2 text-center">

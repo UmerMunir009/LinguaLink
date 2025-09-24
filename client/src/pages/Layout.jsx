@@ -17,7 +17,7 @@ const Layout = () => {
         <div className="flex items-center gap-3">
           <img
             className="w-10 h-10 cursor-pointer"
-            src="src/assets/logo.png"
+            src="/logo.png"
             alt="Logo"
           />
           <h1 className="text-green-400 font-bold text-lg">LinguaLink</h1>
