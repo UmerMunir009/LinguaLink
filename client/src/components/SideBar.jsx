@@ -92,7 +92,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
                   bg-red-600 hover:bg-red-700 transition-colors rounded-md mx-3 mb-4 shadow-md"
         >
           <LogOut className="text-white w-5 mr-2" />
-          <p className="text-white font-bold text-md uppercase tracking-wide">
+          <p className="text-white font-bold text-xs uppercase tracking-wide">
             {loggingOut?'Singing Out...':'Sign Out'}
           </p>
         </div>

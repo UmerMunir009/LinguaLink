@@ -53,7 +53,7 @@ const ChatPage = () => {
             image: authUser.profilePic || undefined,
           },
           token,
-            { enable_presence: true }
+          { enable_presence: true }
         );
 
         const channelId = generateChannelId(authUser.id, targetUserId);
@@ -74,7 +74,6 @@ const ChatPage = () => {
         setLoading(false);
       }
     };
-
     initChat();
 
     return () => {
@@ -97,7 +96,7 @@ const ChatPage = () => {
       <Chat client={chatClient} theme="messaging dark">
         <Channel channel={channel}>
           <Window>
-            <ChatHeader currentUserId={authUser.id} client={chatClient}/>
+            <ChatHeader currentUserId={authUser.id} client={chatClient} />
             <MessageList />
             <MessageInput focus />
           </Window>
