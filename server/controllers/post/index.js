@@ -6,8 +6,10 @@ const {upload}=require('../../utils/multer')
 router.post("/post/create",upload.single("media"), postServices.createPost);   
 router.get("/post/feed", postServices.getFeed);   
 router.get("/post/my-posts", postServices.getUserPosts);   
+router.get("/post/saved-posts", postServices.getSavedPosts);   
 router.delete("/post/my-posts/:id", postServices.deletePost);   
 router.post("/post/toggle-save/:id", postServices.toggleSave);   
+router.post("/post/toggle-like/:id", postServices.toggleLike);   
 
 
 module.exports = router;

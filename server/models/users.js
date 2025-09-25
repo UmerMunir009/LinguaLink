@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Friend, {foreignKey: 'friendId',as: 'friends'});
       User.hasMany(models.Post, {foreignKey: 'userId',as: 'posts'});
       User.hasMany(models.Saved_Post, {foreignKey: 'userId',as: 'saved_posts'});
+      User.hasMany(models.Post_Like, {foreignKey: 'userId',as: 'post_likes'});
 
     }
   }

@@ -1,14 +1,13 @@
 const asyncErrorHandler = require("../../utils/asyncErrorHandler");
 const { STATUS_CODES, TEXTS } = require("../../config/constants");
 const cloudinary = require("cloudinary").v2;
-const { Post ,User,Saved_Post} = require("../../models"); 
+const { Post, User, Saved_Post, Post_Like } = require("../../models");
 const { Op } = require("sequelize");
 
 const createPost = asyncErrorHandler(async (req, res) => {
-
   const { type, title, description, category, content } = req.body;
-//   console.log("Body data:", req.body);
-//   console.log("File data:", req.file);
+  //   console.log("Body data:", req.body);
+  //   console.log("File data:", req.file);
 
   let mediaUrl = null;
 
@@ -28,10 +27,10 @@ const createPost = asyncErrorHandler(async (req, res) => {
   }
 
   const data = await Post.create({
-    userId: req.user.id, 
+    userId: req.user.id,
     title,
-    description:description || "",
-    content:content || "",
+    description: description || "",
+    content: content || "",
     category,
     type,
     mediaUrl: mediaUrl || "",
@@ -43,7 +42,6 @@ const createPost = asyncErrorHandler(async (req, res) => {
     data,
   });
 });
-
 
 const getFeed = asyncErrorHandler(async (req, res) => {
   const { limit, offset } = req.pagination;
@@ -58,7 +56,7 @@ const getFeed = asyncErrorHandler(async (req, res) => {
         model: User,
         as: "user",
         attributes: ["id", "name", "profilePic", "nativeLanguage"],
-      }
+      },
     ],
     order: [["createdAt", "DESC"]],
     limit,
@@ -66,55 +64,69 @@ const getFeed = asyncErrorHandler(async (req, res) => {
   });
 
   const postIds = posts.map((p) => p.id);
-  console.log('POST IDSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS')
-  console.log(postIds)
 
   const savedPosts = await Saved_Post.findAll({
     where: {
       userId: req.user.id,
-      postId: postIds,
+      postId: { [Op.in]: postIds },
     },
     attributes: ["postId"],
     raw: true,
   });
 
-  console.log('SAVED POSTSSSSSSSSSSS')
-  console.log(savedPosts)
-
+  const likedPosts = await Post_Like.findAll({
+    where: {
+      userId: req.user.id,
+      postId: { [Op.in]: postIds },
+    },
+    attributes: ["postId"],
+    raw: true,
+  });
 
   const formattedPosts = posts.map((post) => {
     const json = post.toJSON();
     return {
       ...json,
       saved: savedPosts.some((sp) => sp.postId === post.id),
+      liked: likedPosts.some((sp) => sp.postId === post.id),
     };
   });
-
 
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
     message: TEXTS.SUCCESS,
     data: formattedPosts,
-    hasMore: offset + posts.length < count, 
+    hasMore: offset + posts.length < count,
   });
 });
 
-
 const getUserPosts = asyncErrorHandler(async (req, res) => {
-  const data = await Post.findAll({
+  const posts = await Post.findAll({
     where: {
-      userId:req.user.id
+      userId: req.user.id,
     },
     order: [["createdAt", "DESC"]],
-
   });
+
+   const postsWithLikes = await Promise.all(
+    posts.map(async (post) => {
+      const likeCount = await Post_Like.count({
+        where: { postId:post.id },
+      });
+
+      return {
+        ...post.toJSON(),
+        likes: likeCount
+      };
+    })
+  );
+  
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
     message: TEXTS.SUCCESS,
-    data: data,
+    data: postsWithLikes,
   });
 });
-
 
 const deletePost = asyncErrorHandler(async (req, res) => {
   const { id } = req.params;
@@ -139,12 +151,12 @@ const deletePost = asyncErrorHandler(async (req, res) => {
 
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
-    message: "Post deleted successfully"
+    message: "Post deleted successfully",
   });
 });
 
 const toggleSave = asyncErrorHandler(async (req, res) => {
-  const { id } = req.params; 
+  const { id } = req.params;
   const userId = req.user.id;
 
   const post = await Post.findByPk(id);
@@ -175,13 +187,73 @@ const toggleSave = asyncErrorHandler(async (req, res) => {
   }
 });
 
+const getSavedPosts = asyncErrorHandler(async (req, res) => {
+  const userId = req.user.id;
 
+  const savedPosts = await Saved_Post.findAll({
+    where: { userId },
+    attributes: [],
+    include: [
+      {
+        model: Post,
+        as: "post",
+        attributes: { exclude: ["userId", "createdAt", "updatedAt"] },
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name", "profilePic", "nativeLanguage"],
+          },
+        ],
+      },
+    ],
+  });
 
+  return res.status(STATUS_CODES.SUCCESS).json({
+    statusCode: STATUS_CODES.SUCCESS,
+    message: TEXTS.FOUND,
+    data: savedPosts,
+  });
+});
+
+const toggleLike = asyncErrorHandler(async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.id;
+
+  const post = await Post.findByPk(id);
+
+  if (!post) {
+    return res.status(STATUS_CODES.NOT_FOUND).json({
+      statusCode: STATUS_CODES.NOT_FOUND,
+      message: "Post not found",
+    });
+  }
+
+  const existingLike = await Post_Like.findOne({
+    where: { userId, postId: id },
+  });
+
+  if (existingLike) {
+    await existingLike.destroy();
+    return res.status(STATUS_CODES.SUCCESS).json({
+      statusCode: STATUS_CODES.SUCCESS,
+      message: "Post unliked successfully",
+    });
+  } else {
+    await Post_Like.create({ userId, postId: id });
+    return res.status(STATUS_CODES.SUCCESS).json({
+      statusCode: STATUS_CODES.SUCCESS,
+      message: "Post liked successfully",
+    });
+  }
+});
 
 module.exports = {
   createPost,
   getFeed,
   getUserPosts,
   deletePost,
-  toggleSave
+  toggleSave,
+  getSavedPosts,
+  toggleLike,
 };

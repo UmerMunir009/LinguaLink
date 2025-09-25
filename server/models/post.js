@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       // A Post belongs to a User
       Post.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
       Post.hasMany(models.Saved_Post, {foreignKey: 'postId',as: 'saves'});
+      Post.hasMany(models.Post_Like, {foreignKey: 'postId',as: 'likes'});
 
     }
   }

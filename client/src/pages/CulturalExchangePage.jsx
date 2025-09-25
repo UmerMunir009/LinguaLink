@@ -356,7 +356,7 @@ export default function CulturalFeed() {
                       />
                     )}
 
-                    <PostActions postId={post.id} initiallySaved={post.saved} />
+                    <PostActions postId={post.id} initiallySaved={post.saved}  initiallyLiked={post.liked}/>
                   </div>
                 ))}
                 {hasMore && (
