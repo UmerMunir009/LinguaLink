@@ -30,4 +30,6 @@ async function generateStreamToken({id}) {
   }
 }
 
+
+
 module.exports = { upsertStreamUser,generateStreamToken };

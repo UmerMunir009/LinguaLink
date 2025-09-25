@@ -1,22 +1,20 @@
 const asyncErrorHandler = require("../../utils/asyncErrorHandler");
 const { STATUS_CODES, TEXTS } = require("../../config/constants");
-const { User,Friend } = require("../../models");
+const { User, Friend } = require("../../models");
 const { Op } = require("sequelize");
 
 const recommendedUsers = asyncErrorHandler(async (req, res) => {
-  console.log(req.user)
-  const friendships = await Friend.findAll({where: {
-      [Op.or]: [
-        { userId: req.user.id },
-        { friendId: req.user.id },
-      ],
+  console.log(req.user);
+  const friendships = await Friend.findAll({
+    where: {
+      [Op.or]: [{ userId: req.user.id }, { friendId: req.user.id }],
     },
     attributes: ["userId", "friendId"],
     raw: true,
   });
 
   //getting frind ids
-  const friendIds = friendships.map(f =>
+  const friendIds = friendships.map((f) =>
     f.userId === req.user.id ? f.friendId : f.userId
   );
 
@@ -25,7 +23,15 @@ const recommendedUsers = asyncErrorHandler(async (req, res) => {
       id: { [Op.notIn]: [req.user.id, ...friendIds] },
       isOnBoarded: true,
     },
-    attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic","location"],
+    attributes: [
+      "id",
+      "name",
+      "bio",
+      "nativeLanguage",
+      "learningLanguage",
+      "profilePic",
+      "location",
+    ],
   });
 
   res.status(STATUS_CODES.SUCCESS).json({
@@ -35,21 +41,18 @@ const recommendedUsers = asyncErrorHandler(async (req, res) => {
   });
 });
 
-
 const userFriends = asyncErrorHandler(async (req, res) => {
-  const friendships = await Friend.findAll({where: {
-      status: "accepted", 
-      [Op.or]: [
-        { userId: req.user.id },
-        { friendId: req.user.id },
-      ],
+  const friendships = await Friend.findAll({
+    where: {
+      status: "accepted",
+      [Op.or]: [{ userId: req.user.id }, { friendId: req.user.id }],
     },
     attributes: ["userId", "friendId"],
     raw: true,
   });
 
   //getting frind ids
-  const friendIds = friendships.map(f =>
+  const friendIds = friendships.map((f) =>
     f.userId === req.user.id ? f.friendId : f.userId
   );
 
@@ -58,7 +61,15 @@ const userFriends = asyncErrorHandler(async (req, res) => {
       id: { [Op.in]: [...friendIds] },
       isOnBoarded: true,
     },
-    attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic","location"],
+    attributes: [
+      "id",
+      "name",
+      "bio",
+      "nativeLanguage",
+      "learningLanguage",
+      "profilePic",
+      "location",
+    ],
   });
  
 
@@ -68,7 +79,6 @@ const userFriends = asyncErrorHandler(async (req, res) => {
     data: friends,
   });
 });
-
 
 const friendReq = asyncErrorHandler(async (req, res) => {
   const friendId = req.params.id;
@@ -83,7 +93,7 @@ const friendReq = asyncErrorHandler(async (req, res) => {
   const existingReq = await Friend.findOne({
     where: {
       [Op.or]: [
-        { userId: req.user.id, friendId:friendId },
+        { userId: req.user.id, friendId: friendId },
         { userId: friendId, friendId: req.user.id },
       ],
       status: { [Op.in]: ["pending", "accepted"] },
@@ -100,26 +110,29 @@ const friendReq = asyncErrorHandler(async (req, res) => {
     });
   }
 
-  const data = await Friend.create({userId: req.user.id,friendId,status: "pending"});
+  const data = await Friend.create({
+    userId: req.user.id,
+    friendId,
+    status: "pending",
+  });
 
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
     message: TEXTS.SUCCESS,
-    data:data,
+    data: data,
   });
 });
 
-
-
 const acceptReq = asyncErrorHandler(async (req, res) => {
-  const id=req.params.id
-  const request = await Friend.findOne({ where: {
+  const id = req.params.id;
+  const request = await Friend.findOne({
+    where: {
       id,
       status: "pending",
     },
   });
 
-   if (!request) {
+  if (!request) {
     return res.status(STATUS_CODES.NOT_FOUND).json({
       statusCode: STATUS_CODES.NOT_FOUND,
       message: "No pending friend request found.",
@@ -136,16 +149,16 @@ const acceptReq = asyncErrorHandler(async (req, res) => {
   });
 });
 
-
 const rejectReq = asyncErrorHandler(async (req, res) => {
-  const id=req.params.id
-  const request = await Friend.findOne({ where: {
+  const id = req.params.id;
+  const request = await Friend.findOne({
+    where: {
       id,
       status: "pending",
     },
   });
 
-   if (!request) {
+  if (!request) {
     return res.status(STATUS_CODES.NOT_FOUND).json({
       statusCode: STATUS_CODES.NOT_FOUND,
       message: "No pending friend request found.",
@@ -164,17 +177,27 @@ const rejectReq = asyncErrorHandler(async (req, res) => {
 
 //all reqs that will be visible to reciever
 const getPendingRequests = asyncErrorHandler(async (req, res) => {
-const pendingReqs = await Friend.findAll({
-  where: {
-    friendId: req.user.id, status: "pending",
-  },
-  include: [
-    {
-      model: User,as: "user", 
-      attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic","location"],
+  const pendingReqs = await Friend.findAll({
+    where: {
+      friendId: req.user.id,
+      status: "pending",
     },
-  ],
-});
+    include: [
+      {
+        model: User,
+        as: "user",
+        attributes: [
+          "id",
+          "name",
+          "bio",
+          "nativeLanguage",
+          "learningLanguage",
+          "profilePic",
+          "location",
+        ],
+      },
+    ],
+  });
 
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
@@ -184,7 +207,8 @@ const pendingReqs = await Friend.findAll({
 });
 
 const getOutgoingRequests = asyncErrorHandler(async (req, res) => {
-  const outgoingReqs = await Friend.findAll({where: {
+  const outgoingReqs = await Friend.findAll({
+    where: {
       userId: req.user.id,
       status: "pending",
     },
@@ -192,7 +216,14 @@ const getOutgoingRequests = asyncErrorHandler(async (req, res) => {
       {
         model: User,
         as: "friend",
-        attributes: ["id", "name", "bio", "nativeLanguage", "learningLanguage", "profilePic"],
+        attributes: [
+          "id",
+          "name",
+          "bio",
+          "nativeLanguage",
+          "learningLanguage",
+          "profilePic",
+        ],
       },
     ],
   });
@@ -204,9 +235,6 @@ const getOutgoingRequests = asyncErrorHandler(async (req, res) => {
   });
 });
 
-
-
-
 //TODO:GET API for recently accepted requeests
 module.exports = {
   recommendedUsers,
@@ -215,5 +243,5 @@ module.exports = {
   acceptReq,
   rejectReq,
   getPendingRequests,
-  getOutgoingRequests
+  getOutgoingRequests,
 };
