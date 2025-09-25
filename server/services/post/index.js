@@ -1,7 +1,7 @@
 const asyncErrorHandler = require("../../utils/asyncErrorHandler");
 const { STATUS_CODES, TEXTS } = require("../../config/constants");
 const cloudinary = require("cloudinary").v2;
-const { Post ,User} = require("../../models"); 
+const { Post ,User,Saved_Post} = require("../../models"); 
 const { Op } = require("sequelize");
 
 const createPost = asyncErrorHandler(async (req, res) => {
@@ -58,16 +58,43 @@ const getFeed = asyncErrorHandler(async (req, res) => {
         model: User,
         as: "user",
         attributes: ["id", "name", "profilePic", "nativeLanguage"],
-      },
+      }
     ],
     order: [["createdAt", "DESC"]],
     limit,
     offset,
   });
+
+  const postIds = posts.map((p) => p.id);
+  console.log('POST IDSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS')
+  console.log(postIds)
+
+  const savedPosts = await Saved_Post.findAll({
+    where: {
+      userId: req.user.id,
+      postId: postIds,
+    },
+    attributes: ["postId"],
+    raw: true,
+  });
+
+  console.log('SAVED POSTSSSSSSSSSSS')
+  console.log(savedPosts)
+
+
+  const formattedPosts = posts.map((post) => {
+    const json = post.toJSON();
+    return {
+      ...json,
+      saved: savedPosts.some((sp) => sp.postId === post.id),
+    };
+  });
+
+
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
     message: TEXTS.SUCCESS,
-    data: posts,
+    data: formattedPosts,
     hasMore: offset + posts.length < count, 
   });
 });
@@ -116,6 +143,38 @@ const deletePost = asyncErrorHandler(async (req, res) => {
   });
 });
 
+const toggleSave = asyncErrorHandler(async (req, res) => {
+  const { id } = req.params; 
+  const userId = req.user.id;
+
+  const post = await Post.findByPk(id);
+
+  if (!post) {
+    return res.status(STATUS_CODES.NOT_FOUND).json({
+      statusCode: STATUS_CODES.NOT_FOUND,
+      message: "Post not found",
+    });
+  }
+
+  const existingSave = await Saved_Post.findOne({
+    where: { userId, postId: id },
+  });
+
+  if (existingSave) {
+    await existingSave.destroy();
+    return res.status(STATUS_CODES.SUCCESS).json({
+      statusCode: STATUS_CODES.SUCCESS,
+      message: "Post unsaved successfully",
+    });
+  } else {
+    await Saved_Post.create({ userId, postId: id });
+    return res.status(STATUS_CODES.SUCCESS).json({
+      statusCode: STATUS_CODES.SUCCESS,
+      message: "Post saved successfully",
+    });
+  }
+});
+
 
 
 
@@ -123,5 +182,6 @@ module.exports = {
   createPost,
   getFeed,
   getUserPosts,
-  deletePost
+  deletePost,
+  toggleSave
 };

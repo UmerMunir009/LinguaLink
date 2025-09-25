@@ -7,6 +7,7 @@ router.post("/post/create",upload.single("media"), postServices.createPost);
 router.get("/post/feed", postServices.getFeed);   
 router.get("/post/my-posts", postServices.getUserPosts);   
 router.delete("/post/my-posts/:id", postServices.deletePost);   
+router.post("/post/toggle-save/:id", postServices.toggleSave);   
 
 
 module.exports = router;

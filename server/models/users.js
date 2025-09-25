@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Friend, {foreignKey: 'userId',as: 'user_friends'});
       User.hasMany(models.Friend, {foreignKey: 'friendId',as: 'friends'});
       User.hasMany(models.Post, {foreignKey: 'userId',as: 'posts'});
+      User.hasMany(models.Saved_Post, {foreignKey: 'userId',as: 'saved_posts'});
 
     }
   }

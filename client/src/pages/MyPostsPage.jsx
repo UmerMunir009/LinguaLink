@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../utils/axios";
 import { Loader2, Trash2 } from "lucide-react";
-import { showSuccessToast } from "../utils/toast";
+import { showSuccessToast ,showErrorToast} from "../utils/toast";
 
 const MyPostsPage = () => {
   const [posts, setPosts] = useState([]);
@@ -9,16 +9,16 @@ const MyPostsPage = () => {
   const [deletingId, setDeletingId] = useState(null);
 
   const fetchMyPosts = async () => {
-      try {
-        const res = await axiosInstance.get("/post/my-posts");
-        setPosts(res.data.data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
+    try {
+      const res = await axiosInstance.get("/post/my-posts");
+      setPosts(res.data.data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchMyPosts();
   }, []);
@@ -28,11 +28,17 @@ const MyPostsPage = () => {
     try {
       await axiosInstance.delete(`/post/my-posts/${id}`);
     } catch (error) {
-      console.error("Error deleting post:", error);
+      if (error.response) {
+        console.log(error.response.data.message);
+      } else if (error.request) {
+        showErrorToast("No response from server.");
+      } else {
+        showErrorToast("Unexpected error occurred.");
+      }
     }
     setDeletingId(null);
-    showSuccessToast('Post Deleted Successfully')
-    fetchMyPosts()
+    showSuccessToast("Post Deleted Successfully");
+    fetchMyPosts();
   };
 
   return (

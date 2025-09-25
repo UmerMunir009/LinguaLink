@@ -10,6 +10,7 @@ import {
   Settings,
   Landmark,
   FileText,
+  Bookmark,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { authStore } from "../store/authStore";
@@ -24,6 +25,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
     { to: "/friends", label: "Friends", Icon: SquarePen },
     { to: "/cultural-feed", label: "Cultural Exchange", Icon: Landmark },
     { to: "/my-posts", label: "My Posts", Icon: FileText },
+    { to: "/saved-posts", label: "Saved Posts", Icon: Bookmark },
   ];
 
   const handleLogout=()=>{
