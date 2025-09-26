@@ -106,7 +106,7 @@ const logout = asyncErrorHandler(async (req, res) => {
 
 
 const onboarding = asyncErrorHandler(async (req, res) => {
-  const {bio, nativeLanguage, learningLanguage, location,updatedPic} = req.body;
+  const {bio, nativeLanguage, learningLanguage, location,updatedPic,fcmToken} = req.body;
 
   const user = await User.findOne({ where: { id: req?.user.id }, raw: true });
 
@@ -117,7 +117,7 @@ const onboarding = asyncErrorHandler(async (req, res) => {
     });
   }
   
-  await User.update({ bio,profilePic:updatedPic, nativeLanguage, learningLanguage, location, isOnBoarded: true },
+  await User.update({ bio,profilePic:updatedPic, nativeLanguage, learningLanguage, location, isOnBoarded: true,fcmToken },
       { where: { id: req.user.id } }
    );
 

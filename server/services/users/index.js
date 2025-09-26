@@ -2,6 +2,7 @@ const asyncErrorHandler = require("../../utils/asyncErrorHandler");
 const { STATUS_CODES, TEXTS } = require("../../config/constants");
 const { User, Friend } = require("../../models");
 const { Op } = require("sequelize");
+const sendNotificationToUser = require("../../utils/notifications");
 
 const recommendedUsers = asyncErrorHandler(async (req, res) => {
   console.log(req.user);
@@ -71,7 +72,6 @@ const userFriends = asyncErrorHandler(async (req, res) => {
       "location",
     ],
   });
- 
 
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
@@ -115,6 +115,14 @@ const friendReq = asyncErrorHandler(async (req, res) => {
     friendId,
     status: "pending",
   });
+
+  const reqReceiver = await User.findByPk(friendId);
+
+  if (reqReceiver?.fcmToken) {
+    const title= `💌 New Friend Request`;
+    const message= `${req.user.name} sent you friend request.`
+    await sendNotificationToUser(reqReceiver.fcmToken, title, message);
+  }
 
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,

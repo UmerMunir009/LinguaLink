@@ -8,12 +8,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.Friend, {foreignKey: 'userId',as: 'user_friends'});
-      User.hasMany(models.Friend, {foreignKey: 'friendId',as: 'friends'});
-      User.hasMany(models.Post, {foreignKey: 'userId',as: 'posts'});
-      User.hasMany(models.Saved_Post, {foreignKey: 'userId',as: 'saved_posts'});
-      User.hasMany(models.Post_Like, {foreignKey: 'userId',as: 'post_likes'});
-
+      User.hasMany(models.Friend, { foreignKey: "userId", as: "user_friends" });
+      User.hasMany(models.Friend, { foreignKey: "friendId", as: "friends" });
+      User.hasMany(models.Post, { foreignKey: "userId", as: "posts" });
+      User.hasMany(models.Saved_Post, {
+        foreignKey: "userId",
+        as: "saved_posts",
+      });
+      User.hasMany(models.Post_Like, {
+        foreignKey: "userId",
+        as: "post_likes",
+      });
     }
   }
   User.init(
@@ -23,44 +28,49 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: Sequelize.literal("gen_random_uuid()"),
         allowNull: false,
         primaryKey: true,
-      }, name: {
+      },
+      name: {
         type: Sequelize.STRING,
-        allowNull:false
+        allowNull: false,
       },
-      email:{
-        type:Sequelize.STRING,
-        allowNull:false,
-        unique:true
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
       },
-      password:{
-        type:Sequelize.STRING,
-        allowNull:false
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-      bio:{
-        type:Sequelize.STRING,
-        allowNull:true,
-        defaultValue:''
+      bio: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: "",
       },
-      profilePic:{
-        type:Sequelize.STRING,
-        allowNull:true,
-        defaultValue:''
+      profilePic: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: "",
       },
-      nativeLanguage:{
-        type:Sequelize.STRING,
-        defaultValue:''
+      nativeLanguage: {
+        type: Sequelize.STRING,
+        defaultValue: "",
       },
-      learningLanguage:{
-        type:Sequelize.STRING,
-        defaultValue:''
+      learningLanguage: {
+        type: Sequelize.STRING,
+        defaultValue: "",
       },
-      location:{
-        type:Sequelize.STRING,
-        defaultValue:''
+      location: {
+        type: Sequelize.STRING,
+        defaultValue: "",
       },
-      isOnBoarded:{
-        type:Sequelize.BOOLEAN,
-        defaultValue:false
+      fcmToken: {
+        type: Sequelize.TEXT, 
+        allowNull: true,
+      },
+      isOnBoarded: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

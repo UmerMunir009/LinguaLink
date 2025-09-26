@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import axiosInstance from "../utils/axios";
 import { authStore } from "../store/authStore";
 import { showErrorToast, showSuccessToast } from "../utils/toast";
+import { requestForToken } from "../utils/firebase";
 
 export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
@@ -56,17 +57,27 @@ export const AuthProvider = ({ children }) => {
   const onBoard = async (formdata) => {
     try {
       setOnboarding(true);
-      const { bio, nativeLanguage, learningLanguage, location, updatedPic } = formdata;
+
+      let fcmToken = null;
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        fcmToken = await requestForToken();
+        console.log("FCM Token:", fcmToken);
+      }
+
+      const { bio, nativeLanguage, learningLanguage, location, updatedPic } =
+        formdata;
       const response = await axiosInstance.post("/auth/onboarding", {
         bio,
         nativeLanguage,
         learningLanguage,
         location,
         updatedPic,
+        fcmToken,
       });
 
       setAuthUser(response.data.data);
-      console.log(response.data.data)
+      console.log(response.data.data);
       showSuccessToast("On-boarding completed");
     } catch (error) {
       if (error.response) {
@@ -84,8 +95,11 @@ export const AuthProvider = ({ children }) => {
   const Login = async (formData) => {
     try {
       setLogging(true);
-     const { email,password } = formData;
-      const response = await axiosInstance.post("/auth/login", {email,password});
+      const { email, password } = formData;
+      const response = await axiosInstance.post("/auth/login", {
+        email,
+        password,
+      });
       setAuthUser(response.data.data);
       showSuccessToast("Login Successfull");
     } catch (error) {
@@ -103,14 +117,14 @@ export const AuthProvider = ({ children }) => {
 
   const Logout = async () => {
     try {
-      setLoggingOut(true)
+      setLoggingOut(true);
       const response = await axiosInstance.post("/auth/logout");
       showSuccessToast(response.data.message);
       localStorage.removeItem("token");
       setAuthUser(null);
     } catch (error) {
       if (error.response) {
-       console.log(error.response.data.message);
+        console.log(error.response.data.message);
       } else if (error.request) {
         showErrorToast("No response from server.");
       } else {
