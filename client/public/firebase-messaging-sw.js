@@ -27,7 +27,7 @@ messaging.onBackgroundMessage((payload) => {
     body: payload.notification.body,
     icon: "/icon.png",
     badge: "/icon.png",
-    image: payload.notification.image || "/icon.png",
+    // image: payload.notification.image || "/icon.png",
     requireInteraction: false,
     silent: false,
     tag: "lingua-link-notification",
