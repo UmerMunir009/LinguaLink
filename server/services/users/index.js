@@ -121,8 +121,10 @@ const friendReq = asyncErrorHandler(async (req, res) => {
   if (reqReceiver?.fcmToken) {
     const title= `💌 New Friend Request`;
     const message= `${req.user.name} sent you friend request.`
+    console.log('AAAAAAAAAAAAAAAAAAA')
     await sendNotificationToUser(reqReceiver.fcmToken, title, message);
   }
+  console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
 
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,

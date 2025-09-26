@@ -3,10 +3,12 @@ const admin = require("../config/firebaseAdmin");
 async function sendNotificationToUser(token, title, body) {
   if (!token) throw new Error("FCM token is required");
 
+  //this will send firebase default notification
   const message = {
     notification: { title, body },
     token,
   };
+
 
   try {
     const response = await admin.messaging().send(message);
