@@ -3,6 +3,8 @@ const { STATUS_CODES, TEXTS } = require("../../config/constants");
 const cloudinary = require("cloudinary").v2;
 const { Post, User, Saved_Post, Post_Like } = require("../../models");
 const { Op } = require("sequelize");
+const sendNotificationToUser = require("../../utils/notifications");
+
 
 const createPost = asyncErrorHandler(async (req, res) => {
   const { type, title, description, category, content } = req.body;
@@ -108,19 +110,19 @@ const getUserPosts = asyncErrorHandler(async (req, res) => {
     order: [["createdAt", "DESC"]],
   });
 
-   const postsWithLikes = await Promise.all(
+  const postsWithLikes = await Promise.all(
     posts.map(async (post) => {
       const likeCount = await Post_Like.count({
-        where: { postId:post.id },
+        where: { postId: post.id },
       });
 
       return {
         ...post.toJSON(),
-        likes: likeCount
+        likes: likeCount,
       };
     })
   );
-  
+
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
     message: TEXTS.SUCCESS,
@@ -241,6 +243,13 @@ const toggleLike = asyncErrorHandler(async (req, res) => {
     });
   } else {
     await Post_Like.create({ userId, postId: id });
+    const postOwner = await User.findByPk(post.userId);
+
+    if (postOwner?.fcmToken) {
+      const title = `❤️ Post Liked`;
+      const message = `${req.user.name} liked your post`;
+      await sendNotificationToUser(postOwner.fcmToken, title, message);
+    }
     return res.status(STATUS_CODES.SUCCESS).json({
       statusCode: STATUS_CODES.SUCCESS,
       message: "Post liked successfully",

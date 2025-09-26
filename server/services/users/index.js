@@ -121,10 +121,8 @@ const friendReq = asyncErrorHandler(async (req, res) => {
   if (reqReceiver?.fcmToken) {
     const title= `💌 New Friend Request`;
     const message= `${req.user.name} sent you friend request.`
-    console.log('AAAAAAAAAAAAAAAAAAA')
     await sendNotificationToUser(reqReceiver.fcmToken, title, message);
   }
-  console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
 
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
@@ -152,6 +150,14 @@ const acceptReq = asyncErrorHandler(async (req, res) => {
   request.status = "accepted";
   await request.save();
 
+  const reqSender = await User.findByPk(request.userId);
+
+  if (reqSender?.fcmToken) {
+    const title= `🙌 Request Accepted`;
+    const message= `${req.user.name} accepted your friend request.`
+    await sendNotificationToUser(reqSender.fcmToken, title, message);
+  }
+
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
     message: TEXTS.SUCCESS,
@@ -177,6 +183,14 @@ const rejectReq = asyncErrorHandler(async (req, res) => {
 
   request.status = "rejected";
   await request.save();
+
+  const reqSender = await User.findByPk(request.userId);
+
+  if (reqSender?.fcmToken) {
+    const title= `🚫 Request Rejected`;
+    const message= `${req.user.name} rejected your friend request.`
+    await sendNotificationToUser(reqSender.fcmToken, title, message);
+  }
 
   res.status(STATUS_CODES.SUCCESS).json({
     statusCode: STATUS_CODES.SUCCESS,
