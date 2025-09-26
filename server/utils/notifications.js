@@ -19,7 +19,7 @@ async function sendNotificationToUser(token, title, body) {
   android: {
     notification: {
       icon: "ic_notification", // small icon
-      imageUrl: "hhttps://lingua-link-zeta.vercel.app/icon.png",
+      imageUrl: "https://lingua-link-zeta.vercel.app/icon.png",
     },
   },
   apns: {
