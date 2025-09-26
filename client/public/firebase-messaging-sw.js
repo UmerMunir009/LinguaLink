@@ -41,6 +41,21 @@ messaging.onBackgroundMessage((payload) => {
 });
 
 self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-  event.waitUntil(clients.openWindow("https://lingua-link-zeta.vercel.app"));
-});
+  console.log("[v0] Notification clicked:", event)
+
+  event.notification.close()
+
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes("lingua-link-zeta.vercel.app") && "focus" in client) {
+          return client.focus()
+        }
+      }
+
+      if (clients.openWindow) {
+        return clients.openWindow("https://lingua-link-zeta.vercel.app")
+      }
+    }),
+  )
+})
