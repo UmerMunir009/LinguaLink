@@ -1,5 +1,10 @@
-importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js");
+/* eslint-disable no-undef */
+/* global self */
+
+importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js")
+importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js")
+
+const firebase = self.firebase
 
 const firebaseConfig = {
   apiKey: "AIzaSyAYcwN2iEQgBvCQryQpH1_Encyum7YT444",
@@ -9,19 +14,25 @@ const firebaseConfig = {
   messagingSenderId: "823346609695",
   appId: "1:823346609695:web:67d3f4bacd0b3211ec1f2a",
   measurementId: "G-6C7W27SY6S",
-};
+}
 
-firebase.initializeApp(firebaseConfig);
-
-const messaging = firebase.messaging();
-
-
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig)
+const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage((payload) => {
-  console.log("📩 Received background message: ", payload);
+  console.log("📩 Received background message: ", payload)
 
-  self.registration.showNotification(payload.notification.title, {
+  const notificationOptions = {
     body: payload.notification.body,
-    icon: "/icon.png", 
-  });
-});
+    icon: "/icon.png", // Your green character icon
+    badge: "/icon.png",
+    image: payload.notification.image || "/icon.png",
+    requireInteraction: false,
+    silent: false,
+    tag: "lingua-link-notification",
+    data: payload.data || {},
+  }
+
+  self.registration.showNotification(payload.notification.title, notificationOptions)
+})
