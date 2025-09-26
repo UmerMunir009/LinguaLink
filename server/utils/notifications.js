@@ -11,7 +11,7 @@ async function sendNotificationToUser(token, title, body) {
     },
     webpush: {
       notification: {
-        icon: "/icon.png", // Your green character icon
+        icon: "/icon.png",
         badge: "/icon.png",
         requireInteraction: false,
         tag: "lingua-link-notification",
