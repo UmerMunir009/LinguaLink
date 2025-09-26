@@ -10,31 +10,13 @@ async function sendNotificationToUser(token, title, body) {
   // };
 
   const message = {
-  token,
-  notification: { 
-    title, 
-    body, 
-    image: "https://lingua-link-zeta.vercel.app/icon.png" // 🔹 large image
-  },
-  android: {
+    token,
     notification: {
-      icon: "ic_notification", // small icon
-      imageUrl: "https://lingua-link-zeta.vercel.app/icon.png",
+      title,
+      body,
+      icon: "https://lingua-link-zeta.vercel.app/icon.png",
     },
-  },
-  apns: {
-    payload: {
-      aps: {
-        sound: "default",
-      },
-    },
-    fcm_options: {
-      image: "https://lingua-link-zeta.vercel.app/icon.png",
-    },
-  },
-};
-
-
+  };
 
   try {
     const response = await admin.messaging().send(message);
