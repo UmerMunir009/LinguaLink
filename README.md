@@ -61,11 +61,4 @@ Users across the globe can register, connect with friends, and interact through 
 | TailwindCSS           | UI styling                                  |
 | JWT                   | Authentication and Authorization            |
 
----
 
-## Upcoming Features
-
-* Voice & Video Calling (with Stream integration)
-* Group Video Meetings
-* Community/Group Posts
-* Multilingual Support
